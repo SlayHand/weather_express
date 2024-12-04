@@ -39,11 +39,19 @@ const getWeatherData = (city) => {
 }
  
 app.all ('/', (req, res) => {
-    let city
-    if(req.method== 'GET'){
-        city='Tartu'
-    } 
-    else if (req.method =='POST'){
+    let city;
+    let error = null;
+    
+    if (req.method === 'GET') {
+        city = 'Tartu';
+    } else if (req.method === 'POST') {
+        city = req.body.cityname?.trim();   
+        if (!city || city.length === 0) {
+            error = 'Your input field is empty';
+            res.render('index', { error });
+            return; 
+        }
+    } else {
         city=req.body.cityname
     } 
     getWeatherData(city)
